@@ -6,7 +6,7 @@ variable "gitlab_token" {
 variable "gitlab_url" {
   description = "The URL of Gitlab API"
   type        = string
-  default     = "https://git.hblab.vn/api/v4/"
+  default     = "https://gitlab.com/api/v4/"
 }
 
 variable "name" {
