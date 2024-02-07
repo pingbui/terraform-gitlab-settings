@@ -22,8 +22,8 @@ resource "gitlab_group" "this" {
 }
 
 resource "gitlab_project" "this" {
-  for_each = { for pj in var.projects: pj.name => pj }
-  
+  for_each = { for pj in var.projects : pj.name => pj }
+
   name                                             = lookup(each.value, "name")
   path                                             = lookup(each.value, "path", null)
   namespace_id                                     = gitlab_group.this.id
@@ -55,20 +55,20 @@ resource "gitlab_project" "this" {
 }
 
 resource "gitlab_project_variable" "this" {
-   for_each  = length(keys(var.project_variable)) > 0 ? { for pj in var.projects: pj.name => pj } : {}
+  for_each = length(keys(var.project_variable)) > 0 ? { for pj in var.projects : pj.name => pj } : {}
 
-   project           = [for ids in values(gitlab_project.this)[*]: ids.id if ids.name == lookup(each.value, "name")][0]
-   key               = lookup(var.project_variable, "key")
-   value             = lookup(var.project_variable, "value")
-   variable_type     = lookup(var.project_variable, "variable_type", "env_var")
-   masked            = lookup(var.project_variable, "masked", false)
-   environment_scope = lookup(var.project_variable, "environment_scope", "*")
+  project           = [for ids in values(gitlab_project.this)[*] : ids.id if ids.name == lookup(each.value, "name")][0]
+  key               = lookup(var.project_variable, "key")
+  value             = lookup(var.project_variable, "value")
+  variable_type     = lookup(var.project_variable, "variable_type", "env_var")
+  masked            = lookup(var.project_variable, "masked", false)
+  environment_scope = lookup(var.project_variable, "environment_scope", "*")
 }
 
 resource "gitlab_service_slack" "this" {
-  for_each  = length(keys(var.service_slack)) > 0 ? { for pj in var.projects: pj.name => pj } : {}
+  for_each = length(keys(var.service_slack)) > 0 ? { for pj in var.projects : pj.name => pj } : {}
 
-  project                      = [for ids in values(gitlab_project.this)[*]: ids.id if ids.name == lookup(each.value, "name")][0]
+  project                      = [for ids in values(gitlab_project.this)[*] : ids.id if ids.name == lookup(each.value, "name")][0]
   webhook                      = lookup(var.service_slack, "webhook")
   username                     = lookup(var.service_slack, "username", null)
   push_events                  = lookup(var.service_slack, "push_events", null)

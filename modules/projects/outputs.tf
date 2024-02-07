@@ -5,13 +5,15 @@ output "group_id" {
 
 output "projects" {
   description = "The output of projects."
-  value       = [ for pr in gitlab_project.this:
-    map(
-      "id","${pr.id}", 
-      "name","${pr.name}",
-      "path_with_namespace","${pr.path_with_namespace}"
-    ) 
-  ] 
+  value = [for pr in gitlab_project.this :
+    tomap(
+      {
+        "id"                  = "${pr.id}"
+        "name"                = "${pr.name}"
+        "path_with_namespace" = "${pr.path_with_namespace}"
+      }
+    )
+  ]
 }
 
 output "service_slack_ids" {
